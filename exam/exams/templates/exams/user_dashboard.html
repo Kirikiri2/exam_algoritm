@@ -1,0 +1,15 @@
+{% extends "exams/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Личный кабинет{% endblock title %}
+
+{% block page_header %}
+<h2>Личный кабинет</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="card p-3">
+    <h4>Привет, {{ user.username }}!</h4>
+    <p>Вам осталось решить <strong>{{ remaining_tasks }}</strong> из <strong>{{ total_tasks }}</strong> задач.</p>
+</div>
+{% endblock content %}

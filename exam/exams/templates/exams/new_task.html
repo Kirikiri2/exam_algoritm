@@ -1,0 +1,46 @@
+{% extends "exams/base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="p-4 rounded shadow-sm" style="background-color: #f1f8e9;">
+    {% csrf_token %}
+    <h2 class="mb-4 text-success" style="font-weight: 600;">Создание задачи</h2>
+
+    <div class="form-group mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label" style="color: #2e7d32;">Название</label>
+        {{ form.name|add_class:"form-control border-success" }}
+        {% for error in form.name.errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="{{ form.description.id_for_label }}" class="form-label" style="color: #2e7d32;">Описание</label>
+        {{ form.description|add_class:"form-control border-success" }}
+        {% for error in form.description.errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="{{ form.image.id_for_label }}" class="form-label" style="color: #2e7d32;">Изображение</label>
+        {{ form.image|add_class:"form-control-file" }}
+        {% for error in form.image.errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group mb-4">
+        <label for="{{ form.max_points.id_for_label }}" class="form-label" style="color: #2e7d32;">Максимальный балл</label>
+        {{ form.max_points|add_class:"form-control border-success" }}
+        {% for error in form.max_points.errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn" style="background-color: #388e3c; color: white;">
+        Создать задачу
+    </button>
+</form>
+{% endblock %}

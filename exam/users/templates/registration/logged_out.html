@@ -1,0 +1,16 @@
+{% extends "exams/base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 420px;">
+    <div class="p-4 rounded shadow-sm border border-success" style="background-color: #e6f2e6;">
+        <p class="text-success fw-semibold mb-4" style="font-size: 1.1rem; text-align: center;">
+            Вы вышли из системы.
+        </p>
+        <a href="{% url 'users:login' %}" class="btn btn-success w-100 py-2 fw-bold" style="font-size: 1.1rem;">
+            Войти снова
+        </a>
+    </div>
+</div>
+{% endblock %}

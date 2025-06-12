@@ -1,0 +1,30 @@
+{% extends "exams/base.html" %}
+{% block content %}
+<h2 class="mb-4 text-success" style="font-weight: 600;">Прогресс пользователей</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped shadow-sm" style="background-color: #f1f8e9;">
+        <thead class="thead-light">
+            <tr>
+                <th>Пользователь</th>
+                <th>Решено задач</th>
+                <th>Баллы</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in user_progress %}
+            <tr>
+                <td>
+                    <a href="{% url 'exams:user_profile' item.user.id %}" class="text-success font-weight-bold">
+                        {{ item.user.username }}
+                    </a>
+                </td>
+                <td>{{ item.solved }} / {{ item.total }}</td>
+                <td>{{ item.points }} / {{ item.max_points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

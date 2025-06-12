@@ -1,0 +1,61 @@
+{% extends "exams/base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h2 class="mb-4 text-success" style="font-weight: 600;">Задачи</h2>
+
+{% if user.is_superuser %}
+<p>
+    <a href="{% url 'exams:new_task' %}" class="btn btn-outline-success mb-3">
+        ➕ Добавить новую задачу
+    </a>
+</p>
+{% endif %}
+
+{% if tasks_data %}
+<div class="list-group">
+    {% for item in tasks_data %}
+        <div class="list-group-item mb-3 rounded shadow-sm border-success" style="background-color: #f1f8e9;">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h5 class="mb-1 text-success">{{ item.task.name }}</h5>
+                    {% if task.image %}
+    <img src="{{ task.image.url }}" alt="Изображение задачи" style="max-width: 100%; height: auto;">
+{% endif %}
+                    <p class="mb-1">Максимум: <strong>{{ item.task.max_points }}</strong> баллов</p>
+
+                    {% if not user.is_superuser %}
+                        {% if item.answered %}
+                            <span class="badge badge-success px-2 py-1">
+                                ✔ Ответ отправлен
+                            </span>
+                        {% endif %}
+
+                        {% if item.points is not None %}
+                            <span class="ml-2 text-dark">Оценка: <strong>{{ item.points }}</strong> из {{ item.task.max_points }}</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'exams:task' item.task.id %}" class="btn btn-sm btn-outline-success mt-2 mt-sm-0">
+                    Перейти →
+                </a>
+                {% if user.is_superuser %}
+                {% if user.is_superuser %}
+    <a href="{% url 'exams:edit_task' item.task.id %}" class="btn btn-sm btn-outline-primary mt-2 mt-sm-0 ms-2">
+        ✏️ Редактировать
+    </a>
+{% endif %}
+    <a href="{% url 'exams:delete_task' item.task.id %}" class="btn btn-sm btn-outline-danger mt-2 mt-sm-0 ms-2">
+        Удалить
+    </a>
+{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Нет задач ¯\_(ツ)_/¯</p>
+{% endif %}
+{% endblock %}

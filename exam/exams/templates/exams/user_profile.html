@@ -1,0 +1,49 @@
+{% extends "exams/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h2 class="mb-4 text-success" style="font-weight: 600;">Профиль пользователя: {{ profile_user.username }}</h2>
+
+<table class="table table-bordered table-hover rounded shadow-sm">
+    <thead class="table-success">
+        <tr>
+            <th>Задача</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in statuses %}
+        <tr>
+            <td>
+                {% if item.answer %}
+                    <a href="{% url 'exams:grade_task' profile_user.id item.task.id %}" class="text-decoration-none">
+                        {{ item.task.name }}
+                    </a>
+                {% else %}
+                    {{ item.task.name }}
+                {% endif %}
+            </td>
+            <td>
+                {% if item.status == "Проверена" %}
+                    <span class="px-2 py-1 rounded text-white" style="background-color: #28a745; font-weight: 600;">
+                        {{ item.status }}
+                    </span>
+                {% elif item.status == "В работе" %}
+                    <span class="px-2 py-1 rounded text-white" style="background-color: #ffc107; font-weight: 600;">
+                        {{ item.status }}
+                    </span>
+                {% else %}
+                    <span class="px-2 py-1 rounded text-white" style="background-color: #dc3545; font-weight: 600;">
+                        {{ item.status }}
+                    </span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'exams:admin_dashboard' %}" class="btn btn-outline-success mt-3">
+    ← Назад
+</a>
+{% endblock %}

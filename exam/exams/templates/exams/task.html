@@ -1,0 +1,101 @@
+{% extends "exams/base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+{% block content %}
+<div style="border: 2px solid #4CAF50; border-radius: 10px; padding: 20px; background-color: #f1f8e9; max-width: 900px; margin: 0 auto;">
+
+    <h2 class="mb-3">{{ task.name }}</h2>
+    <p>{{ task.description }}</p>
+
+    {% if task.image %}
+        <img src="{{ task.image.url }}" alt="Изображение задачи" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px;">
+    {% endif %}
+
+    <hr>
+
+    <div>
+        <h4>Максимальный балл: {{ task.max_points }}</h4>
+        {% if not user.is_superuser %}
+            {% if grade %}
+                <p>✅ Проверено</p>
+                <p>💯 Получено баллов: {{ grade.points }}</p>
+            {% else %}
+                <p>🕓 Задача ещё не проверена</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if not user.is_superuser %}
+    <hr>
+    <div>
+        <h3 class="mt-4">Ваш ответ</h3>
+        <form method="post" enctype="multipart/form-data" id="answer-form">
+            {% csrf_token %}
+            {% for field in form %}
+  <div class="mb-3">
+    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+    {{ field|add_class:"form-control" }}
+    {% for error in field.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endfor %}
+
+            <button type="submit" class="btn btn-success">Отправить</button>
+        </form>
+    </div>
+    {% endif %}
+    <a href="{% url 'exams:tasks' %}" class="btn btn-outline-success mt-3">
+    ← Назад
+</a>
+
+    {% if not user.is_superuser %}
+    <hr>
+    <h4 class="mt-4">Ранее отправленные ответы</h4>
+    {% for answer in user_answers %}
+        <div style="margin-bottom: 20px; background-color: #fff; border-left: 4px solid #4CAF50; padding: 10px; border-radius: 6px;">
+            <p>
+                <strong>Создано:</strong> {{ answer.add_date|date:"d.m.Y H:i:s" }}<br>
+                <a href="{% url 'exams:edit_answer' answer.id %}">Изменить</a>
+            </p>
+
+            <pre style="background-color: #272822; color: #f8f8f2; padding: 10px; overflow-x: auto; border-radius: 5px;">
+<code>{{ answer.text|safe }}</code></pre>
+
+            {% if answer.edits.exists %}
+            <details style="margin-top: 10px;">
+                <summary>История изменений</summary>
+                {% for edit in answer.edits.all %}
+                    <div style="margin-top: 5px; padding: 5px; background-color: #eee;">
+                        <strong>{{ edit.edit_date|date:"d.m.Y H:i:s" }}</strong>
+                        <pre style="white-space: pre-wrap; background: #f4f4f4; padding: 5px;"><code>{{ edit.edited_text }}</code></pre>
+                    </div>
+                {% endfor %}
+            </details>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Вы ещё не отправляли ответов на эту задачу.</p>
+    {% endfor %}
+    {% endif %}
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const textarea = document.querySelector("#answer-form textarea");
+
+    if (textarea) {
+        textarea.addEventListener("keydown", function (e) {
+            if (e.key === "Tab") {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

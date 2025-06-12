@@ -1,0 +1,40 @@
+{% extends "exams/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="card shadow-sm p-4 mb-4" style="background-color: #f0f9f4; border-radius: 10px;">
+    <p>
+        <a href="{% url 'exams:task' answer.task.id %}" class="h5 text-success font-weight-bold">
+            {{ answer.task.name }}
+        </a>
+    </p>
+    <p class="mb-3 font-weight-medium text-dark">Редактировать ответ:</p>
+
+    <form action="{% url 'exams:edit_answer' answer.id %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success mt-3 px-4">
+            Сохранить изменения
+        </button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.getElementById('id_text');
+
+    if (textarea) {
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '\t' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        });
+    }
+});
+</script>
+{% endblock content %}

@@ -1,0 +1,100 @@
+{% load bootstrap4 %}
+
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>{% block title %}Exam System{% endblock title %}</title>
+	{% bootstrap_css %}
+	<style>
+		body {
+			background-color: #e8f5e9; /* очень светлый зеленый фон */
+			color: #2e4d25; /* темно-зеленый цвет текста */
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+		}
+		.navbar {
+			background-color: #4caf50 !important; /* основной зеленый navbar */
+			border-color: #388e3c !important;
+		}
+		.navbar-brand,
+		.nav-link,
+		.navbar-text {
+			color: #d0f0c0 !important; /* светло-зеленый текст в navbar */
+		}
+		.navbar-brand:hover,
+		.nav-link:hover {
+			color: #a5d6a7 !important; /* более светлый зеленый ховер */
+		}
+		.navbar-toggler {
+			border-color: #a5d6a7 !important;
+		}
+		.navbar-toggler-icon {
+			background-image: url("data:image/svg+xml;charset=utf8,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='%23d0f0c0' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+		}
+		button[type="submit"] {
+			background-color: #388e3c;
+			color: white;
+			border: none;
+			padding: 5px 12px;
+			border-radius: 4px;
+			transition: background-color 0.3s ease;
+			cursor: pointer;
+		}
+		button[type="submit"]:hover {
+			background-color: #2e7d32;
+		}
+		main.container {
+			background: #ffffffcc; /* белый полупрозрачный фон */
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 12px rgba(46, 77, 37, 0.2);
+		}
+	</style>
+	{% bootstrap_javascript jquery='full' %}
+</head>
+<body>
+<nav class="navbar navbar-light bg-light mb-4 border">
+	<a class="navbar-brand" href="{% url 'exams:index' %}">Exam System</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarCollapse" aria-controls="navbarCollapse"
+			aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span></button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<ul class="navbar-nav mr-auto">
+			 {% if user.is_authenticated%}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'exams:tasks' %}">Задачи</a>
+    </li>
+    {% endif %}
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			{% if user.is_authenticated %}
+				<li class="nav-item">
+					<span class="navbar-text">Привет, {{ user.username }}.</span>
+				</li>
+				<li class="nav-item">
+					<form method="post" action="{% url 'users:logout' %}">{% csrf_token %} <button type="submit">logout</button></form>
+				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'users:login' %}">Вход</a>
+				</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+<main role="main" class="container">
+	<div class="pb-2 mb-2 border-bottom">
+		{% block page_header %}{% endblock page_header %}
+	</div>
+	<div>
+		{% block content %}{% endblock content %}
+	</div>
+</main>
+</body>
+</html>

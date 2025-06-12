@@ -1,0 +1,35 @@
+{% extends "exams/base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 420px;">
+    <h2 class="mb-4 text-success" style="font-weight: 700; text-align: center;">Вход в систему</h2>
+
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert" style="font-size: 0.95rem;">
+        Неверный логин или пароль. Попробуйте снова.
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:login' %}" class="bg-white p-4 rounded shadow-sm border border-success">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-success">{{ field.label }}</label>
+                {{ field|add_class:"form-control border-success" }}
+                {% if field.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-success w-100 py-2 fw-bold" style="font-size: 1.1rem;">
+            Войти
+        </button>
+        <input type="hidden" name="next" value="{% url 'exams:index' %}" />
+    </form>
+</div>
+{% endblock %}
